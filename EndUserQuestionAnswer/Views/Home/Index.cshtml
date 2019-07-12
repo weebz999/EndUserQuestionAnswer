@@ -1,0 +1,155 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/jquery-3.4.1.js"></script>
+   
+    <script src="~/Bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container_fuild ">
+       
+
+        <div class="row mt-lg-5" style="margin-top:40px;">
+            <div class="col-md-2 col-sm-2 col-xs-2 ">
+
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-2   ">
+                <label id="lbl" class="label-warning" >   </label>
+            </div>
+
+            <div class="col-md-3 col-sm-3 col-xs-3">
+                <form>
+                    <div class="form-group ">
+                        <input id="answer" type="text" class="form-control" onfocus="true"  />
+                        
+
+                    </div>
+                    
+                    <button type="button" id="Btn" class="btn btn-primary"  onclick="insert()" >SAVE</button>
+                </form>
+
+                @*@Html.Label(" ")
+                <label id="lbl"></label>
+                <label for="Questions" id="Label"></label>
+                <input id="answer" class="Txt" type="text" />
+                <label id="lblError"></label>
+                <br />
+                <input id="Btn" type="button" value="Save" />*@
+            </div>
+
+            <div class="col-md-3 col-sm-3 col-xs-3 ">
+                <label id="lblError"  class="label-danger text-white-50">   </label>
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-2 ">
+
+            </div>
+
+
+        </div>
+    </div>
+</body>
+</html>
+
+<script type="text/javascript">
+    customerID = 1;
+    var currentQuestionsId = 1;
+    var nextQuestionID = 0;
+    var errorMessage = '';
+    function GetQuestion(qid) {
+        $("#lblError").hide();
+        $("#answer").val('');
+         
+        
+        currentQuestionsId = qid;
+        //QuestionId = 1 ;
+        $.ajax({
+            url: "/Home/GetQuestion",
+            type: "GET",
+            data: { "QuestionsId": qid },
+            cache: false,
+            async: true
+        }).done(function (data) {
+            console.log(data);
+            
+            $('#lbl').html(data.Question);
+            errorMessage = data.Question;
+            nextQuestionID = data.NextID;
+            //});
+
+
+        }).fail(function (jqXHR, textStatus) {
+        });
+    }
+    var txt
+    function insert() {
+
+
+        txt = $('#answer').val();
+        if (txt.length == 0) {
+                ValidationErrorMessage(errorMessage);
+            } else {
+               
+                $(document).ready(function () {
+                    $.ajax({
+                        url: "/Home/SaveData",
+                        type: "GET",
+                        data: { "customerID": customerID ,"answerText": $('#answer').val(), "questionId": currentQuestionsId  },
+                        cache: false,
+                        async: false
+                    }).done(function (data) {
+
+                        alert("Thank You For Answering ");
+                        console.log(nextQuestionID);
+                        GetQuestion(nextQuestionID);
+
+                    })
+                });
+            }
+       
+    }
+
+   
+    GetQuestion(1);
+    function ValidationErrorMessage(Question) {
+
+        var errorMessage = '';
+        errorMessage = Question;
+        if (errorMessage.includes("Married")) {
+            $("#lblError").show();
+            $("#lblError").html("* Required " + errorMessage.substring(7, errorMessage.length - 1) + "Field");
+
+        }
+
+        else if (errorMessage.includes("House Is Insured")) {
+            $("#lblError").show();
+            $("#lblError").html("* Required " + errorMessage.substring(7, errorMessage.length - 1) + "Field");
+
+        }
+        else if (errorMessage.includes("Vehicle Is Insured")) {
+            $("#lblError").show();
+            $("#lblError").html("* Required " + errorMessage.substring(7, errorMessage.length - 1) + "Field");
+
+        }
+        else if (errorMessage.includes("Vehicle")) {
+            $("#lblError").show();
+            $("#lblError").html("* Required " + errorMessage.substring(11, errorMessage.length - 1) + "Field");
+
+        }
+
+
+        else {
+
+            $("#lblError").show();
+            $("#lblError").html("* Required " + errorMessage.substring(12, errorMessage.length - 1) + "Field");
+        }
+    }
+   
+</script>
