@@ -39,8 +39,7 @@ namespace EndUserQuestionAnswer.Controllers
 
 
         public JsonResult Savedata(int customerID,string answerText,int questionID )
-        {
-            QuestionModel questionModel = new QuestionModel();
+        { 
             string sccuess = Db.SaveData(customerID, answerText, questionID);
 
 

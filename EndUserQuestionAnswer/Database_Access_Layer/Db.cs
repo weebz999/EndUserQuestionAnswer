@@ -39,7 +39,7 @@ namespace EndUserQuestionAnswer.Database_Access_Layer
              
             SqlConnection con = new SqlConnection(ConnectionStrings);
             con.Open();
-            SqlCommand cmd = new SqlCommand("Sp_EndUserAnswers3", con);
+            SqlCommand cmd = new SqlCommand("Sp_EndUserAnswer_With_QuestionID", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add(new SqlParameter() { ParameterName = "@CustomerID", Value = customerID });
             cmd.Parameters.Add(new SqlParameter() { ParameterName = "@Answers", Value = AnswerText });
